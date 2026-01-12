@@ -25,9 +25,8 @@ main = Agent(
     name="Entry",
     instruction="""You are the uniplan scheduling Assistant, a comprehensive academic welfare support system. You coordinate between different specialists to provide the best possible academic schedule to help the student study for their exams and tests without mental stress.
     
-    """
-    description="Main uniplan agent for coordinating debate between the scheduling sub agents"
+    """,
+    description="Main uniplan agent for coordinating debate between the scheduling sub agents",
     model=model_config, 
     tools = [AgentTool(agent=academic),AgentTool(agent=welfare),AgentTool(agent=scheduler)],
-    after_agent_callback=auto_save_to_memory,
 )

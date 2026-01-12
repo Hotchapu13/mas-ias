@@ -1,7 +1,12 @@
 import os
 from dotenv import load_dotenv
-from google.adk.agents import LlmAgent
+from google.adk.agents import Agent
 from google.adk.models.google_llm import Gemini
+from google.adk.tools.agent_tool import AgentTool
+
+from .debateAgents.AcademicAgent.agent import academic_priority_agent as academic
+from .debateAgents.SchedulerAgent.agent import scheduler_agent as scheduler
+from .debateAgents.WelfareAgent.agent import welfare_agent as welfare
 
 #load environment variables
 load_dotenv()
@@ -16,10 +21,13 @@ if not api_key:
 # Configure the model to use gemini with api key
 model_config = Gemini(model="gemini-2.0-flash", api_key=api_key)
 
-scheduler_agent = LlmAgent(
-    name="Scheduler",
-    instruction="""
-    You are an agent specialised only to use the information provided to you to generate a reading schedule based on the info provided to you 
-"""
-    model=model_config
+main = Agent(
+    name="Entry",
+    instruction="""You are the uniplan scheduling Assistant, a comprehensive academic welfare support system. You coordinate between different specialists to provide the best possible academic schedule to help the student study for their exams and tests without mental stress.
+    
+    """
+    description="Main uniplan agent for coordinating debate between the scheduling sub agents"
+    model=model_config, 
+    tools = [AgentTool(agent=academic),AgentTool(agent=welfare),AgentTool(agent=scheduler)],
+    after_agent_callback=auto_save_to_memory,
 )
